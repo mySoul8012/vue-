@@ -30,12 +30,11 @@
     border-top: none;
     border-left: none;
     border-right: none;
-    margin-top: 10px;
-    width: 80%;
+    margin-top: 0px;
   }
   .btoon1{
-    width: 82%;
     margin-top: 20px;
+    width: 100%;
   }
   .accountErrorHidden{
     margin-top: 5px;
@@ -47,6 +46,7 @@
 </style>
 
 <script>
+  import axios from 'axios'
   export default {
     data() {
       return {
@@ -58,6 +58,9 @@
     methods: {
       submitForm(username, password){
         console.log(username, password);
+        axios.get("http://www.localhost:8080/").then(function (res) {
+          console.log(res);
+        })
         return false;
       }
     }
