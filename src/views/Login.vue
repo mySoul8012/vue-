@@ -58,8 +58,10 @@
     methods: {
       submitForm(username, password){
         console.log(username, password);
-        axios.get("http://www.localhost:8080/").then(function (res) {
-          console.log(res);
+        let jsonData = "{\"username\": \""+ username +"\",\"password\": \""+ password + "\"}"
+        console.log(JSON.parse(jsonData));
+        axios.post("http://mock-api.com/wz2vlNzL.mock/login", JSON.parse(jsonData)).then(function (res) {
+          console.log(res.data.status);
         })
         return false;
       }

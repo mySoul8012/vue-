@@ -8,7 +8,13 @@
                 <ProductSelect v-show="cur==1"></ProductSelect>
                 <TitleManagement v-show="cur==2"  @func="getMsgFormSon" id="printTable" :tableData="tableData" :tabheight="tabheight"
                                  :tableHeader="tableHeader"
-                                 :loading="loading" :isshow="isshow"></TitleManagement>
+                                 :loading="loading" :isshow="isshow"
+                                 :pagUn="pagUn"
+                                 :pageSizeNumber="pageSizeNumber"
+                                 :pagOn="pagOn" @changePagOn="changePagOn"
+                                 @changePagUn="changePagUn"
+                                 :pageNum="pageNum" @changePageNum="changePageNum" @changeDataPage="changeDataPage"
+                ></TitleManagement>
             </el-container>
         </div>
     </div>
@@ -40,6 +46,10 @@
         },
         data() {
             return {
+                pageNum: 1,
+                pageSizeNumber: 0,
+                pagOn: 0,
+                pagUn: 0,
                 msg: 'https://www.iming.info/',
                 cur: 0,
                 loading: false,
@@ -67,16 +77,46 @@
                 console.log(444444);
                 console.log(cur);
                 this.cur = cur;
+            },
+            changePagOn(pagOn){
+                this.pagOn = pagOn;
+            },
+            changePagUn(pagUn){
+                this.pagUn = pagUn;
+            },
+            changePageNum(pageNum){
+                this.pageNum = pageNum;
+            },
+            changeDataPage(number){
+                // 更改table里的数据
+                let that = this;
+                axios.get("http://mock-api.com/wz2vlNzL.mock/title?pageNum=" + number +"&pageSize=10").then(function (res) {
+                    console.log(res.data);
+                    console.log(that.msg);
+                    that.tableData = res.data;
+                })
             }
         },
         created: function(){
             let that = this;
-            axios.get("http://mock-api.com/wz2vlNzL.mock/ming").then(function (res) {
+            axios.get("http://mock-api.com/wz2vlNzL.mock/title?pageNum=" +  1 +"&pageSize=10").then(function (res) {
                 console.log(res.data);
                 console.log(that.msg);
                 that.tableData = res.data;
             })
-
+            axios.get("http://mock-api.com/wz2vlNzL.mock/pageNumber").then(function (res) {
+                console.log(that.pageSizeNumber = res.data.data.pageSizeNumber)
+                console.log(res.data.data.pageSizeNumber);
+                console.log(that.pageSizeNumber)
+                // 如果为首页，按钮不可用
+                if(that.pageNum == 1){
+                    that.pagOn = 1;
+                }
+                // 如果为页尾，按钮不可用
+                if(that.pageSizeNumber == that.pageNum){
+                    that.pagUn = 1;
+                }
+            })
         }
     }
 </script>
