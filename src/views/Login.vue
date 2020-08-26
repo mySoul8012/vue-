@@ -60,8 +60,15 @@
         console.log(username, password);
         let jsonData = "{\"username\": \""+ username +"\",\"password\": \""+ password + "\"}"
         console.log(JSON.parse(jsonData));
+        let that = this;
         axios.post("http://mock-api.com/wz2vlNzL.mock/login", JSON.parse(jsonData)).then(function (res) {
           console.log(res.data.status);
+          if(res.data.status == 200){
+            that.$store.commit("set_userInfo", res.data.data);
+            that.$router.push("./index");
+          }else{
+            that.$message('请求失败');
+          }
         })
         return false;
       }

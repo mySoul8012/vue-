@@ -59,7 +59,7 @@
           第 {{pageNum}} / {{pageSizeNumber}}页
           <el-button type="primary" v-show="pagUn==0" @click="pageUn()">下一页</el-button>
           <el-button v-show="pagUn==1" @click="pageUn()">下一页</el-button>
-      </div>
+        </div>
       </div>
       <el-dialog
               :visible.sync="dialogVisible"
@@ -101,12 +101,8 @@
 
 <script>
   import axios from 'axios'
-  import Pagination from "./Pagination";
   export default {
-    name: 'TitleManagement',
-    components: {
-      Pagination
-    },
+    name: "AnswerManament",
     // 传入的数据
     props: {
       pageNum: 0,
@@ -302,7 +298,6 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
   .text{
     width: 100%;
@@ -354,4 +349,3 @@
     height: 100%;
   }
 </style>
-

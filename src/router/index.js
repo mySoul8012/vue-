@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '../store/';
 
 Vue.use(VueRouter)
 
@@ -17,6 +18,9 @@ Vue.use(VueRouter)
   {
     path: '/index',
     name: 'index',
+    meta: {
+      requireAuth: true
+    },
     component: () => import('../views/Index')
   },
   {
@@ -29,10 +33,34 @@ Vue.use(VueRouter)
   }
 ]
 
+// 页面刷新，重新赋值userInfo
+if(sessionStorage.getItem("userInfo")){
+  store.commit("set_userInfo", sessionStorage.getItem('userInfo'))
+}
+
+
+
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
 
+router.beforeEach(
+    (to, from, next) => {
+      if(to.matched.some(res => res.meta.requireAuth)){
+        console.log(store.state.userInfo.msg)
+        if(store.state.userInfo.msg == "success"){
+          next();
+        }else{
+          // 跳转至登录页面
+          next({
+            path: '/'
+          })
+        }
+      }else{
+        next()
+      }
+    }
+)
 export default router

@@ -15,6 +15,15 @@
                                  @changePagUn="changePagUn"
                                  :pageNum="pageNum" @changePageNum="changePageNum" @changeDataPage="changeDataPage"
                 ></TitleManagement>
+                <AnswerManament v-show="cur==31"
+                                @func="getMsgFormSon" id="printTable1" :tableData="tableDataAnswer" :tabheight="tabheight"
+                                :tableHeader="tableHeaderAnswer"
+                                :loading="loading" :isshow="isshow"
+                                :pagUn="pagUnAnswer"
+                                :pageSizeNumber="pageSizeNumberAnswer"
+                                :pagOn="pagOnAnswer" @changePagOn="changePagOnAnswer"
+                                @changePagUn="changePagUnAnswer"
+                                :pageNum="pagNumAnswer" @changePageNum="changePageNumAnswer" @changeDataPage="changeDataPageAnswer"></AnswerManament>
             </el-container>
         </div>
     </div>
@@ -36,8 +45,10 @@
     import ProductSelect from "../components/ProductSelect";
     import TitleManagement from "../components/TitleManagement";
     import axios from 'axios'
+    import AnswerManament from "../components/AnswerManament";
     export default {
         components: {
+            AnswerManament,
             TitleManagement,
             Menum,
             BoxIndex,
@@ -46,6 +57,10 @@
         },
         data() {
             return {
+                pagNumAnswer: 1,
+                pageSizeNumberAnswer: 0,
+                pagOnAnswer: 0,
+                pagUnAnswer: 0,
                 pageNum: 1,
                 pageSizeNumber: 0,
                 pagOn: 0,
@@ -69,6 +84,24 @@
                     }
                 ],
                 tableData: [
+                ],
+                tableHeaderAnswer: [      // 表头
+                    {prop: 'userId', label: '用户ID'},
+                    {prop: 'userName', label: '用户昵称'},
+                    {prop: 'productId', label: '保险ID'},
+                    {prop: 'productName', label: '保险名称'},
+                    {prop: 'productTime', label: '问题时间'},
+                    {prop: 'answer', label: '问题'},
+                    {prop: 'status', label: '状态'},
+                    // 此处为操作栏，不需要可以删除，clickFun绑定此操作按钮的事件
+                    {
+                        prop: 'oper', label: '操作', fixed: 'right', minWidth: '160px', width: '160px',
+                        oper: [
+                            {name: '查看', style: 'primary', clickFun: this.handleClick}
+                        ]
+                    }
+                ],
+                tableDataAnswer: [
                 ],
         }
         },
@@ -95,6 +128,25 @@
                     console.log(that.msg);
                     that.tableData = res.data;
                 })
+            },
+            changePagOnAnswer(pagOn){
+                this.pagOnAnswer = pagOn;
+            },
+            changePagUnAnswer(pagUn){
+                this.pagUnAnswer = pagUn;
+            },
+            changePageNumAnswer(pageNum){
+                this.pagNumAnswer = pageNum;
+            },
+            changeDataPageAnswer(number){
+                // 更改table里的数据
+                let that = this;
+                console.log("---------------------------------------------------")
+                axios.get("http://mock-api.com/wz2vlNzL.mock/answerManagement?number=" + number +"&size=10").then(function (res) {
+                    console.log(res.data);
+                    console.log(that.msg);
+                    that.tableDataAnswer = res.data;
+                })
             }
         },
         created: function(){
@@ -116,6 +168,12 @@
                 if(that.pageSizeNumber == that.pageNum){
                     that.pagUn = 1;
                 }
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/answerManagement?number=1&size=10").then(function (res) {
+                that.tableDataAnswer = res.data;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/answer/pageNumber").then(function (res) {
+                that.pageSizeNumberAnswer = res.data.data.pageSizeNumber;
             })
         }
     }

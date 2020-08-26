@@ -1,6 +1,6 @@
 <template>
   <div class="text1">
-    <a href="http://localhost:8080/logout" class="text1">退出</a>
+    <a href="http://localhost:8080/" class="text1">退出</a>
   </div>
 </template>
 
