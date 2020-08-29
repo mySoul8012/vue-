@@ -26,7 +26,7 @@
   }
   .main01{
   }
-  .el-input__inner{
+  .main01 .el-input__inner{
     border-top: none;
     border-left: none;
     border-right: none;

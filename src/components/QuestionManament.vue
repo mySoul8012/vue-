@@ -4,31 +4,31 @@
       <div class="text">
         <div class="text01">
           <div class="text07">
-              <el-col :span="8">
-                <div class="grid-content bg-purple" style="padding:20px">
-                  <el-input placeholder="用户ID/用户昵称/保险ID/保险名称" v-model="searchToken" class="input-with-select">
+            <el-col :span="8">
+              <div class="grid-content bg-purple" style="padding:20px">
+                <el-input placeholder="用户ID/用户昵称/保险ID/保险名称" v-model="searchToken" class="input-with-select">
                   <el-button slot="append" @click="search02()">搜索</el-button>
-                  </el-input>
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple-light">
-                </div>
-              </el-col>
-              <el-col :span="8">
-                <div class="grid-content bg-purple" style="padding: 40px">
-                  <el-select v-model="value" placeholder="请选择"
-                    @change="selectTrigger(value)">
-                    <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                            @click="test">
-                    </el-option>
-                  </el-select>
-                </div>
-              </el-col>
+                </el-input>
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <div class="grid-content bg-purple-light">
+              </div>
+            </el-col>
+            <el-col :span="8">
+              <div class="grid-content bg-purple" style="padding: 40px">
+                <el-select v-model="value" placeholder="请选择"
+                           @change="selectTrigger(value)">
+                  <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                          @click="test">
+                  </el-option>
+                </el-select>
+              </div>
+            </el-col>
           </div>
         </div>
         <div class="text02">
@@ -96,8 +96,8 @@
       </div>
       <div style="width: 100%; padding: 0px" class="text08">
         <el-input placeholder="请输入内容" v-model="userId01" :disabled="true">
-        <template slot="prepend">用户序号</template>
-      </el-input>
+          <template slot="prepend">用户序号</template>
+        </el-input>
         <el-input placeholder="请输入内容" v-model="userName" :disabled="true">
           <template slot="prepend" style="width:30px">用户昵称</template>
         </el-input>
@@ -174,23 +174,23 @@
     name: "AnswerManament",
     data(){
       return{
-          answerId: "",
-          dialogVisible: false,
-          index: 0,
-          answerState: "正常",
-          answerImage: [],
-          state: 0,
-          answerCount: "",
-          answerContent: "",
-          answerLike: "",
-          productId: "",
-          productName: "",
-          time: "",
-          userId01: "",
-          userName: "",
-          userType: "",
-          hiddenReason: "",
-          hiddenNotes: ""
+        answerId: "",
+        dialogVisible: false,
+        index: 0,
+        answerState: "正常",
+        answerImage: [],
+        state: 0,
+        answerCount: "",
+        answerContent: "",
+        answerLike: "",
+        productId: "",
+        productName: "",
+        time: "",
+        userId01: "",
+        userName: "",
+        userType: "",
+        hiddenReason: "",
+        hiddenNotes: ""
       }
     },
     // 传入的数据
@@ -251,8 +251,8 @@
         this.$emit('func', IDS)
       },
       clickFun(number){
-          console.log(number);
-          this.index=1;
+        console.log(number);
+        this.index=1;
         let that = this;
         axios.get("http://mock-api.com/wz2vlNzL.mock/answer/info?answerId=" + number.answerId).then(function (res) {
           console.log(res.data);
@@ -282,14 +282,14 @@
         // 发送请求
         let that = this;
         axios.get("http://mock-api.com/wz2vlNzL.mock/answer/RestoreHidder?answerId=" + this.answerId).then(function (res) {
-            console.log(res.data.states);
-            if(res.data.states == "200"){
-              that.$message("恢复隐藏成功");
-              that.state = 0;
-            }
-            if(res.data.states == 500){
-              that.$message("恢复隐藏失败")
-            }
+          console.log(res.data.states);
+          if(res.data.states == "200"){
+            that.$message("恢复隐藏成功");
+            that.state = 0;
+          }
+          if(res.data.states == 500){
+            that.$message("恢复隐藏失败")
+          }
         })
       },
       handleClose(done) {
@@ -330,20 +330,21 @@
         console.log(jsonData);
         let that = this;
         axios.post("http://mock-api.com/wz2vlNzL.mock/answer/hidden", jsonData).then(function (res) {
-            console.log(res);
-            if(res.data.state == "200"){
-              that.$message("提交成功")
-              that.cancel();
-              that.state = 1;
-            }
-            if(res.data.state == "500"){
-              that.$message("提交失败");
-              that.cancel();
-            }
+          console.log(res);
+          if(res.data.state == "200"){
+            that.$message("提交成功")
+            that.cancel();
+            that.state = 1;
+          }
+          if(res.data.state == "500"){
+            that.$message("提交失败");
+            that.cancel();
+          }
         })
       },
       search01(){
         console.log(this.UserDialogId);
+
         let DialogId = this.UserDialogId;
         let that = this;
         axios.get("http://mock-api.com/wz2vlNzL.mock/userName?userId=" + DialogId).then((res) => {
@@ -363,12 +364,10 @@
       },
       // 更改页面数据
       changeDataPage(number){
-
         this.$emit("changeDataPage", number)
       },
       // 上一页
       pageNo(){
-        console.log(this.value);
         // 获取当前页
         if(this.pageNum == 1){
           // 不做任何变动
@@ -432,9 +431,9 @@
         let that = this;
         // 发起请求查询
         axios.get("http://mock-api.com/wz2vlNzL.mock/answer/search?token=" + this.searchToken).then(function (res)  {
-            console.log(res.data.data);
-            console.log([res.data.data])
-            that.changeTableDataAnswer([res.data.data])
+          console.log(res.data.data);
+          console.log([res.data.data])
+          that.changeTableDataAnswer([res.data.data])
         })
       },
       test(){
@@ -446,37 +445,39 @@
       selectTrigger(val){// 数据更新  页数更改
         // 调用数据更新接口
         let that = this;
-        if(val == "ming1") {
-          axios.get("http://mock-api.com/wz2vlNzL.mock/answerManagement?number=1&size=10&options=ming1").then((res) => {
-            that.changeTableDataAnswer(res.data);
-            that.$emit("changeValue", "ming1");
-          });
-          // 更新总页数
-          axios.get("http://mock-api.com/wz2vlNzL.mock/answer/pageNumber?options=ming1").then(function (res) {
-            console.log(res.data.data.pageSizeNumber);
-            that.changePageSizeNumberAnswer(res.data.data.pageSizeNumber);
+        if(val == "ming1"){
+          this.$emit("changeValue", "ming1");
+          // 不需要做任何更改
+          axios.get("http://mock-api.com/wz2vlNzL.mock/question/list?pageNo=1").then(function (res) {
+            that.changeTableDataAnswer(res.data.data);
           })
-        }
-        if(val == "ming0"){
-          axios.get("http://mock-api.com/wz2vlNzL.mock/answerManagement?number=1&size=10&").then((res) => {
-            that.changeTableDataAnswer(res.data);
-            that.$emit("changeValue", "ming0");
-          });
-          // 更新总页数
-          axios.get("http://mock-api.com/wz2vlNzL.mock/answer/pageNumber").then(function (res) {
-            console.log(res.data.data.pageSizeNumber);
-            that.changePageSizeNumberAnswer(res.data.data.pageSizeNumber);
+          // 总页数更改
+          axios.get("http://mock-api.com/wz2vlNzL.mock/Question/pageSIzeNumberQuestion").then(function (res) {
+            that.$emit("changePageSizeNumberAnswer", res.data.data.pageSizeNumberQuestion)
           })
         }
         if(val == "ming2"){
-          axios.get("http://mock-api.com/wz2vlNzL.mock/answerManagement?number=1&size=10&options=ming2").then((res) => {
-            that.changeTableDataAnswer(res.data);
-            that.$emit("changeValue", "ming2");
-          });
-          // 更新总页数
-          axios.get("http://mock-api.com/wz2vlNzL.mock/answer/pageNumber?options=ming2").then(function (res) {
-            console.log(res.data.data.pageSizeNumber);
-            that.changePageSizeNumberAnswer(res.data.data.pageSizeNumber);
+          // 正常
+          this.$emit("changeValue", "ming2");
+          // 发送ajax
+          axios.get("http://mock-api.com/wz2vlNzL.mock/question/list?pageNo=1&state=" + val).then(function (res) {
+              that.changeTableDataAnswer(res.data.data);
+          })
+          axios.get("http://mock-api.com/wz2vlNzL.mock/Question/pageSIzeNumberQuestion&state=ming2").then(function (res) {
+
+            // 总页数更改
+              that.$emit("changePageSizeNumberAnswer", res.data.data.pageSizeNumberQuestion)
+          })
+        }
+        if(val == "ming3"){
+          // 隐藏
+          this.$emit("changeValue", "ming3");
+          axios.get("http://mock-api.com/wz2vlNzL.mock/question/list?pageNo=1&state=" + val).then(function (res) {
+            that.changeTableDataAnswer(res.data.data);
+          })
+          axios.get("http://mock-api.com/wz2vlNzL.mock/Question/pageSIzeNumberQuestion&state=ming3").then(function (res) {
+            // 总页数更改
+            that.$emit("changePageSizeNumberAnswer", res.data.data.pageSizeNumberQuestion)
           })
         }
       },

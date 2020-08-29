@@ -23,7 +23,22 @@
                                 :pageSizeNumber="pageSizeNumberAnswer"
                                 :pagOn="pagOnAnswer" @changePagOn="changePagOnAnswer"
                                 @changePagUn="changePagUnAnswer"
-                                :pageNum="pagNumAnswer" @changePageNum="changePageNumAnswer" @changeDataPage="changeDataPageAnswer"></AnswerManament>
+                                :pageNum="pagNumAnswer" @changePageNum="changePageNumAnswer" @changeDataPage="changeDataPageAnswer"
+                                @changeTableDataAnswer="changeTableDataAnswer" :options="options" @changePageSizeNumberAnswer="changePageSizeNumberAnswer"
+                                :value="value" @changeValue="changeValue"
+                ></AnswerManament>
+                <QuestionManament v-show="cur==32"
+                                @func="getMsgFormSon" id="printTable2" :tableData="tableDataQuestion" :tabheight="tabheight"
+                                :tableHeader="tableHeaderQuestion"
+                                :loading="loading" :isshow="isshow"
+                                :pagUn="pagUnQuestion"
+                                :pageSizeNumber="pageSizeNumberQuestion"
+                                :pagOn="pagOnQuestion" @changePagOn="changePagOnQuestion"
+                                @changePagUn="changePagUnQuestion"
+                                :pageNum="pagNumQuestion" @changePageNum="changePageNumQuestion" @changeDataPage="changeDataPageQuestion"
+                                @changeTableDataAnswer="changeTableDataQuestion" :options="optionsQuestion" @changePageSizeNumberAnswer="changePageSizeNumberQuestion"
+                                :value="valueQuestion" @changeValue="changeValueQuestion"
+                ></QuestionManament>
             </el-container>
         </div>
     </div>
@@ -46,6 +61,7 @@
     import TitleManagement from "../components/TitleManagement";
     import axios from 'axios'
     import AnswerManament from "../components/AnswerManament";
+    import QuestionManament from "../components/QuestionManament";
     export default {
         components: {
             AnswerManament,
@@ -53,10 +69,34 @@
             Menum,
             BoxIndex,
             BoxHeader,
-            ProductSelect
+            ProductSelect,
+            QuestionManament
         },
         data() {
             return {
+                tableDataQuestion: "",
+                tableHeaderQuestion: [      // 表头
+                    {prop: 'UserQuestionId', label: '用户ID'},
+                    {prop: 'UserQuestionName', label: '用户昵称'},
+                    {prop: 'UserQuestionProductId', label: '保险ID'},
+                    {prop: 'UserQuestionProductName', label: '保险产品'},
+                    {prop: 'UserQuestionProductTime', label: '回答时间'},
+                    {prop: 'UserQuestionProductAnswer', label: '问题'},
+                    {prop: "UserQuestionStates", label: "状态"},
+                    // 此处为操作栏，不需要可以删除，clickFun绑定此操作按钮的事件
+                    {
+                        prop: 'oper', label: '操作', fixed: 'right', minWidth: '160px', width: '160px',
+                        oper: [
+                            {name: '查看', style: 'primary', clickFun: this.handleClick}
+                        ]
+                    }
+                ],
+                pagUnQuestion: 0,
+                pageSizeNumberQuestion: 1,
+                pagNumQuestion: 1,
+                pagOnQuestion: 1,
+                value: "",
+                options: "",
                 pagNumAnswer: 1,
                 pageSizeNumberAnswer: 0,
                 pagOnAnswer: 0,
@@ -65,6 +105,8 @@
                 pageSizeNumber: 0,
                 pagOn: 0,
                 pagUn: 0,
+                optionsQuestion: "",
+                valueQuestion: "",
                 msg: 'https://www.iming.info/',
                 cur: 0,
                 loading: false,
@@ -129,6 +171,17 @@
                     that.tableData = res.data;
                 })
             },
+            changePagOnQuestion(pagOn){
+                this.pagOnQuestion = pagOn;
+                console.log("------------------+++++++++++++++++++++++++++++++++++++++++")
+                console.log(pagOn);
+            },
+            changePagUnQuestion(pagUn){
+                this.pagUnQuestion = pagUn;
+            },
+            changePageNumQuestion(pageNum){
+                this.pagNumQuestion = pageNum;
+            },
             changePagOnAnswer(pagOn){
                 this.pagOnAnswer = pagOn;
             },
@@ -142,11 +195,60 @@
                 // 更改table里的数据
                 let that = this;
                 console.log("---------------------------------------------------")
-                axios.get("http://mock-api.com/wz2vlNzL.mock/answerManagement?number=" + number +"&size=10").then(function (res) {
-                    console.log(res.data);
-                    console.log(that.msg);
-                    that.tableDataAnswer = res.data;
-                })
+                if(this.value == "" || this.value == "ming0"){
+                    axios.get("http://mock-api.com/wz2vlNzL.mock/answerManagement?number=" + number +"&size=10").then(function (res) {
+                        console.log(res.data);
+                        console.log(that.msg);
+                        that.tableDataAnswer = res.data;
+                    })
+                }else if(this.value == "ming1"){
+                    axios.get("http://mock-api.com/wz2vlNzL.mock/answerManagement?number=" + number +"&size=10&options=ming1").then(function (res) {
+                        console.log(res.data);
+                        console.log(that.msg);
+                        that.tableDataAnswer = res.data;
+                    })
+                }
+            },
+            changeDataPageQuestion(number){
+                let that = this;
+                console.log(this.valueQuestion)
+                if(this.valueQuestion == "ming1" || this.valueQuestion == "") {
+                    axios.get("http://mock-api.com/wz2vlNzL.mock/question/list?pageNo=" + number).then(function (res) {
+                        console.log(res.data.data);
+                        that.tableDataQuestion = res.data.data;
+                    })
+                }
+                if(this.valueQuestion == "ming2"){
+                    axios.get("http://mock-api.com/wz2vlNzL.mock/question/list?pageNo="+  number +"&state=ming2").then(function (res) {
+                        that.tableDataQuestion = res.data.data;
+                    })
+                }
+
+                if(this.valueQuestion == "ming3"){
+                    axios.get("http://mock-api.com/wz2vlNzL.mock/question/list?pageNo="+  number +"&state=ming3").then(function (res) {
+                        that.tableDataQuestion = res.data.data;
+                    })
+                }
+            },
+            changeTableDataQuestion(tableDataQuestion){
+              this.tableDataQuestion = tableDataQuestion;
+            },
+            changeTableDataAnswer(tableDataAnswer){
+                this.tableDataAnswer = tableDataAnswer;
+            },
+            changePageSizeNumberAnswer(number){
+                this.pageSizeNumberAnswer = number;
+            },
+            changeValue(value){
+                this.value = value;
+            },
+            changeValueQuestion(value){
+                console.log(value + "++++++++++++++++++++++++++++++++++++++")
+                this.valueQuestion = value;
+                console.log(this.valueQuestion);
+            },
+            changePageSizeNumberQuestion(number){
+                this.pageSizeNumberQuestion = number;
             }
         },
         created: function(){
@@ -174,6 +276,19 @@
             })
             axios.get("http://mock-api.com/wz2vlNzL.mock/answer/pageNumber").then(function (res) {
                 that.pageSizeNumberAnswer = res.data.data.pageSizeNumber;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/answer/status").then(function (res) {
+                that.options = res.data.data.options;
+                console.log(res)
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/question/list?pageNo=" + "1").then(function (res) {
+                that.tableDataQuestion = res.data.data;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/Question/pageSIzeNumberQuestion").then(function (res) {
+                that.pageSizeNumberQuestion = res.data.data.pageSizeNumberQuestion;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/question/states").then(function (res) {
+                that.optionsQuestion = res.data.data;
             })
         }
     }
