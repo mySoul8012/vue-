@@ -90,9 +90,9 @@
     </el-row>
     <el-row v-show="index==1" style="width: 100%">
       <div style="width: 100%">
-        <el-col :span="8"><div class="grid-content bg-purple answerInfo">问题信息</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple answerInfo">回答信息</div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple-light"></div></el-col>
-        <el-col :span="8"><div class="grid-content bg-purple answerInfo">问题状态: {{answerState}}</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple answerInfo">回答状态: {{answerState}}</div></el-col>
       </div>
       <div style="width: 100%; padding: 0px" class="text08">
         <el-input placeholder="请输入内容" v-model="userId01" :disabled="true">
@@ -111,17 +111,32 @@
           <template slot="prepend">保险产品</template>
         </el-input>
         <el-input placeholder="请输入内容" v-model="time" :disabled="true">
-          <template slot="prepend">提问时间</template>
-        </el-input>
-        <el-input placeholder="请输入内容" v-model="answerCount" :disabled="true">
-          <template slot="prepend">回答数量</template>
+          <template slot="prepend">回答时间</template>
         </el-input>
         <el-input placeholder="请输入内容" v-model="answerLike" :disabled="true">
-          <template slot="prepend">回答点赞</template>
+          <template slot="prepend">点赞数量</template>
         </el-input>
       </div>
       <div style="width: 100%;padding-top:30px;">
-        <el-col :span="8"><div class="grid-content bg-purple answerInfo">问题内容</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple answerInfo">回答内容</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple-light"></div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple answerInfo"></div></el-col>
+      </div>
+      <div>
+        <el-input
+                disabled="true"
+                type="textarea"
+                :rows="2"
+                placeholder="请输入内容"
+                style="width:95%"
+                v-model="questionContent">
+        </el-input>
+      </div>
+      <div style="text-align: left;width: 98%;padding-left: 30px;padding-top: 20px;">
+        <el-image class="text09" v-for="srcItem in answerImage" :key="srcItem.url" :src="srcItem.url"></el-image>
+      </div>
+      <div style="width: 100%;padding-top:30px;">
+        <el-col :span="8"><div class="grid-content bg-purple answerInfo">所属问题</div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple-light"></div></el-col>
         <el-col :span="8"><div class="grid-content bg-purple answerInfo"></div></el-col>
       </div>
@@ -134,9 +149,6 @@
                 style="width:95%"
                 v-model="answerContent">
         </el-input>
-      </div>
-      <div style="text-align: left;width: 98%;padding-left: 30px;padding-top: 20px;">
-        <el-image class="text09" v-for="srcItem in answerImage" :key="srcItem.url" :src="srcItem.url"></el-image>
       </div>
       <div>
         <el-input v-show="state==1" placeholder="请输入内容" v-model="hiddenNotes" :disabled="true">
@@ -174,6 +186,7 @@
     name: "AnswerManament",
     data(){
       return{
+        questionContent: "",
         answerId: "",
         dialogVisible: false,
         index: 0,
@@ -181,11 +194,11 @@
         answerImage: [],
         state: 0,
         answerCount: "",
-        answerContent: "",
-        answerLike: "",
+        answerContent: "44444444444444444",
         productId: "",
         productName: "",
         time: "",
+        answerLike: "6666666",
         userId01: "",
         userName: "",
         userType: "",
@@ -251,22 +264,23 @@
         this.$emit('func', IDS)
       },
       clickFun(number){
-        console.log(number);
+        console.log(number.UserProductId + "+++++++++++++++++++++");
         this.index=1;
         let that = this;
-        axios.get("http://mock-api.com/wz2vlNzL.mock/answer/info?answerId=" + number.answerId).then(function (res) {
-          console.log(res.data);
-          that.answerContent = res.data.answerContent;
-          that.answerCount = res.data.answerCount;
-          that.answerImage = res.data.answerImage;
-          that.answerLike = res.data.answerLike;
-          that.productId = res.data.productId;
-          that.productName = res.data.productName;
-          that.time = res.data.time;
-          that.userId01 = res.data.userId;
-          that.userName = res.data.userName;
-          that.userType = res.data.userType;
-          that.answerId = res.data.answerId;
+        axios.get("http://mock-api.com/wz2vlNzL.mock/question/info?UserProductId=" + number.UserProductId).then(function (res) {
+            console.log(res.data.data);
+            that.userId01 = res.data.data.userId01;
+            that.userName = res.data.data.userName;
+            that.userType = res.data.data.userType;
+            that.productId = res.data.data.productId;
+            that.productName = res.data.data.productName;
+            that.time = res.data.data.time;
+            that.answerCount = res.data.data.answerCount;
+            that.questionContent = res.data.data.questionContent;
+            that.answerCount = res.data.data.answerCount;
+            that.answerLike = res.data.data.answerLike;
+            that.answerContent = res.data.data.answerContent;
+            that.answerState = res.data.data.answerState;
         })
       },
       clickFun1(){
@@ -281,7 +295,7 @@
         console.log(this.answerId);
         // 发送请求
         let that = this;
-        axios.get("http://mock-api.com/wz2vlNzL.mock/answer/RestoreHidder?answerId=" + this.answerId).then(function (res) {
+        axios.get("http://mock-api.com/wz2vlNzL.mock/question/RestoreHidder?answerId=01").then(function (res) {
           console.log(res.data.states);
           if(res.data.states == "200"){
             that.$message("恢复隐藏成功");
@@ -292,13 +306,7 @@
           }
         })
       },
-      handleClose(done) {
-        this.$confirm('确认关闭？')
-            .then(_ => {
-              done();
-            })
-            .catch(_ => {});
-      },
+
       success(){
         this.dialogVisible = false;
         let that = this;
@@ -324,12 +332,12 @@
         // 页面状态
         console.log(this.state);
         // 问题id
-        console.log(this.answerId);
-        let jsonData = "{\"hiddenNotes\": \""+ this.hiddenNotes +"\",\"answerId\": \""+ this.answerId +"\"}"
+        console.log(this.userId01);
+        let jsonData = "{\"hiddenNotes\": \""+ this.hiddenNotes +"\",\"answerId\": \""+ this.userId01 +"\"}"
         jsonData = JSON.parse(jsonData);
         console.log(jsonData);
         let that = this;
-        axios.post("http://mock-api.com/wz2vlNzL.mock/answer/hidden", jsonData).then(function (res) {
+        axios.post("http://mock-api.com/wz2vlNzL.mock/question/hidden", jsonData).then(function (res) {
           console.log(res);
           if(res.data.state == "200"){
             that.$message("提交成功")
@@ -427,13 +435,13 @@
         this.$emit("changeTableDataAnswer", TableData);
       },
       search02(){
-        console.log(this.searchToken);
+        console.log(this.searchToken + "+++++++++++++++++++++++++++++++++");
         let that = this;
         // 发起请求查询
-        axios.get("http://mock-api.com/wz2vlNzL.mock/answer/search?token=" + this.searchToken).then(function (res)  {
-          console.log(res.data.data);
+        axios.get("http://mock-api.com/wz2vlNzL.mock/question/anser?token=" + this.searchToken).then(function (res)  {
+          console.log(res.data);
           console.log([res.data.data])
-          that.changeTableDataAnswer([res.data.data])
+          that.changeTableDataAnswer(res.data.data)
         })
       },
       test(){
@@ -486,6 +494,7 @@
       }
     },
     created: function () {
+
     }
   }
 </script>
