@@ -39,6 +39,17 @@
                                 @changeTableDataAnswer="changeTableDataQuestion" :options="optionsQuestion" @changePageSizeNumberAnswer="changePageSizeNumberQuestion"
                                 :value="valueQuestion" @changeValue="changeValueQuestion"
                 ></QuestionManament>
+                <ProductData v-show="cur==41"
+                             @func="getMsgFormSon" id="printTable3" :tableData="tableDataProduct" :tabheight="tabheight"
+                             :tableHeader="tableHeaderProduct"
+                             :loading="loading" :isshow="isshow"
+                             :pagUn="pagUnQuestion"
+                             :pageSizeNumber="pageSizeNumberQuestion"
+                             :pagOn="pagOnQuestion" @changePagOn="changePagOnQuestion"
+                             @changePagUn="changePagUnQuestion"
+                             :pageNum="pagNumQuestion" @changePageNum="changePageNumQuestion" @changeDataPage="changeDataPageQuestion"
+                             @changeTableDataAnswer="changeTableDataQuestion" :options="optionsQuestion" @changePageSizeNumberAnswer="changePageSizeNumberQuestion"
+                             :value="valueQuestion" @changeValue="changeValueQuestion"></ProductData>
             </el-container>
         </div>
     </div>
@@ -62,8 +73,10 @@
     import axios from 'axios'
     import AnswerManament from "../components/AnswerManament";
     import QuestionManament from "../components/QuestionManament";
+    import ProductData from "../components/ProductData";
     export default {
         components: {
+            ProductData,
             AnswerManament,
             TitleManagement,
             Menum,
@@ -83,6 +96,26 @@
                     {prop: 'UserQuestionProductTime', label: '回答时间'},
                     {prop: 'UserQuestionProductAnswer', label: '问题'},
                     {prop: "UserQuestionStates", label: "状态"},
+                    // 此处为操作栏，不需要可以删除，clickFun绑定此操作按钮的事件
+                    {
+                        prop: 'oper', label: '操作', fixed: 'right', minWidth: '160px', width: '160px',
+                        oper: [
+                            {name: '查看', style: 'primary', clickFun: this.handleClick}
+                        ]
+                    }
+                ],
+                tableHeaderProduct: [
+                    {prop: 'UserQuestionId', label: '保险ID'},
+                    {prop: 'UserQuestionName', label: '保险产品'},
+                    {prop: 'UserQuestionProductId', label: '保险公司'},
+                    {prop: 'UserQuestionProductName', label: '浏览'},
+                    {prop: 'UserQuestionProductTime', label: '收藏'},
+                    {prop: 'UserQuestionProductAnswer', label: '口碑'},
+                    {prop: "UserQuestionStates", label: "解读"},
+                    {prop: "usertmp", label: "点评赞"},
+                    {prop: "userTmp", label: "问题"},
+                    {prop: "回答", label: "回答"},
+                    {prop: "问答赞", label: "问答赞"},
                     // 此处为操作栏，不需要可以删除，clickFun绑定此操作按钮的事件
                     {
                         prop: 'oper', label: '操作', fixed: 'right', minWidth: '160px', width: '160px',
@@ -145,6 +178,8 @@
                 ],
                 tableDataAnswer: [
                 ],
+                tableDataProduct: [
+                ]
         }
         },
         methods: {
