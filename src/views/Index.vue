@@ -43,13 +43,24 @@
                              @func="getMsgFormSon" id="printTable3" :tableData="tableDataProduct" :tabheight="tabheight"
                              :tableHeader="tableHeaderProduct"
                              :loading="loading" :isshow="isshow"
-                             :pagUn="pagUnQuestion"
-                             :pageSizeNumber="pageSizeNumberQuestion"
-                             :pagOn="pagOnQuestion" @changePagOn="changePagOnQuestion"
-                             @changePagUn="changePagUnQuestion"
-                             :pageNum="pagNumQuestion" @changePageNum="changePageNumQuestion" @changeDataPage="changeDataPageQuestion"
-                             @changeTableDataAnswer="changeTableDataQuestion" :options="optionsQuestion" @changePageSizeNumberAnswer="changePageSizeNumberQuestion"
+                             :pagUn="pagUnProduct"
+                             :pageSizeNumber="pageSizeNumberProduct"
+                             :pagOn="pagOnProduct" @changePagOn="changePagOnProduct"
+                             @changePagUn="changePagUnProduct"
+                             :pageNum="pagNumProduct" @changePageNum="changePageNumProduct" @changeDataPage="changeDataPageProduct"
+                             @changeTableDataAnswer="changeTableDataProduct" :options="optionsQuestion" @changePageSizeNumberAnswer="changePageSizeNumberQuestion"
                              :value="valueQuestion" @changeValue="changeValueQuestion"></ProductData>
+                <CompanyData v-show="cur==42"
+                             @func="getMsgFormSon" id="printTable4" :tableData="tableDataCompany" :tabheight="tabheight"
+                             :tableHeader="tableHeaderCompany"
+                             :loading="loading" :isshow="isshow"
+                             :pagUn="pagUnCompany"
+                             :pageSizeNumber="pageSizeNumberCompany"
+                             :pagOn="pagOnCompany" @changePagOn="changePagOnCompany"
+                             @changePagUn="changePagUnCompany"
+                             :pageNum="pagNumCompany" @changePageNum="changePageNumCompany" @changeDataPage="changeDataPageProduct"
+                             @changeTableDataAnswer="changeTableDataCompany" :options="optionsCompany" @changePageSizeNumberAnswer="changePageSizeNumberCompany"
+                             :value="valueCompany" @changeValue="changeValueQuestion"></CompanyData>
             </el-container>
         </div>
     </div>
@@ -59,7 +70,6 @@
         background-color: #B3C0D1;
         color: #333;
     }
-
     .el-aside {
         color: #333;
     }
@@ -74,8 +84,10 @@
     import AnswerManament from "../components/AnswerManament";
     import QuestionManament from "../components/QuestionManament";
     import ProductData from "../components/ProductData";
+    import CompanyData from "../components/CompanyData";
     export default {
         components: {
+            CompanyData,
             ProductData,
             AnswerManament,
             TitleManagement,
@@ -87,6 +99,25 @@
         },
         data() {
             return {
+                valueCompany: "",
+                optionsCompany: "",
+                pagNumCompany: "1",
+                pagOnCompany: "1",
+                pagUnCompany: "0",
+                pageSizeNumberCompany: "",
+                tableDataCompany: "",
+                tableHeaderCompany: [      // 表头
+                    {prop: 'Company', label: '保险公司'},
+                    {prop: 'browse', label: '浏览'},
+                    {prop: 'favorites', label: '收藏'},
+                    {prop: 'mouth', label: '口碑'},
+                    {prop: 'interpretation', label: '解读'},
+                    {prop: 'reviewLike', label: '点评获赞'}
+                ],
+                pagNumProduct: "1",
+                pageSizeNumberProduct: "1",
+                pagUnProduct: 0,
+                pagOnProduct: 1,
                 tableDataQuestion: "",
                 tableHeaderQuestion: [      // 表头
                     {prop: 'UserQuestionId', label: '用户ID'},
@@ -105,24 +136,17 @@
                     }
                 ],
                 tableHeaderProduct: [
-                    {prop: 'UserQuestionId', label: '保险ID'},
-                    {prop: 'UserQuestionName', label: '保险产品'},
-                    {prop: 'UserQuestionProductId', label: '保险公司'},
-                    {prop: 'UserQuestionProductName', label: '浏览'},
-                    {prop: 'UserQuestionProductTime', label: '收藏'},
-                    {prop: 'UserQuestionProductAnswer', label: '口碑'},
-                    {prop: "UserQuestionStates", label: "解读"},
-                    {prop: "usertmp", label: "点评赞"},
-                    {prop: "userTmp", label: "问题"},
-                    {prop: "回答", label: "回答"},
-                    {prop: "问答赞", label: "问答赞"},
-                    // 此处为操作栏，不需要可以删除，clickFun绑定此操作按钮的事件
-                    {
-                        prop: 'oper', label: '操作', fixed: 'right', minWidth: '160px', width: '160px',
-                        oper: [
-                            {name: '查看', style: 'primary', clickFun: this.handleClick}
-                        ]
-                    }
+                    {prop: 'insuranceID', label: '保险ID'},
+                    {prop: 'insuranceProduct', label: '保险产品'},
+                    {prop: 'insuranceCompany', label: '保险公司'},
+                    {prop: 'browse', label: '浏览'},
+                    {prop: 'favorites', label: '收藏'},
+                    {prop: 'wordMouth', label: '口碑'},
+                    {prop: "interpretaion", label: "解读"},
+                    {prop: "reviewsLike", label: "点评赞"},
+                    {prop: "question", label: "问题"},
+                    {prop: "answer", label: "回答"},
+                    {prop: "answerLike", label: "问答赞"}
                 ],
                 pagUnQuestion: 0,
                 pageSizeNumberQuestion: 1,
@@ -183,6 +207,36 @@
         }
         },
         methods: {
+            changePageNumCompany(number){
+                this.pagNumCompany = number;
+            },
+            changePagUnCompany(number){
+              this.pagUnCompany = number;
+            },
+            changePagOnCompany(number){
+                this.pagOnCompany = number;
+            },
+            changePageSizeNumberCompany(number){
+                this.pageSizeNumberCompany = number;
+            },
+            changeTableDataCompany(number){
+                this.tableDataCompany = number;
+            },
+            changeDataPageProduct(number){
+                let that = this;
+                axios.get("http://mock-api.com/wz2vlNzL.mock/product?number=" + number).then(function (res) {
+                    that.tableDataProduct = res.data.data;
+                })
+            },
+            changePagUnProduct(number){
+                this.pagUnProduct = number;
+            },
+            changePageNumProduct(number){
+                this.pagNumProduct = number;
+            },
+            changePagOnProduct(number){
+                this.pagOnProduct = number;
+            },
             changeData(cur){
                 console.log(444444);
                 console.log(cur);
@@ -284,6 +338,9 @@
             },
             changePageSizeNumberQuestion(number){
                 this.pageSizeNumberQuestion = number;
+            },
+            changeTableDataProduct(table){
+                this.tableDataProduct = table;
             }
         },
         created: function(){
@@ -309,8 +366,14 @@
             axios.get("http://mock-api.com/wz2vlNzL.mock/answerManagement?number=1&size=10").then(function (res) {
                 that.tableDataAnswer = res.data;
             })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/company/page?number=1").then(function (res) {
+                that.tableDataCompany = res.data.data;
+            })
             axios.get("http://mock-api.com/wz2vlNzL.mock/answer/pageNumber").then(function (res) {
                 that.pageSizeNumberAnswer = res.data.data.pageSizeNumber;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/product/numberPag").then(function (res) {
+                that.pageSizeNumberCompany = res.data.data.pageSizeNumber;
             })
             axios.get("http://mock-api.com/wz2vlNzL.mock/answer/status").then(function (res) {
                 that.options = res.data.data.options;
@@ -324,6 +387,12 @@
             })
             axios.get("http://mock-api.com/wz2vlNzL.mock/question/states").then(function (res) {
                 that.optionsQuestion = res.data.data;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/product?number=1").then(function (res) {
+                that.tableDataProduct = res.data.data;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/product/numberPag").then(function (res) {
+                that.pageSizeNumberProduct = res.data.data.pageSizeNumber;
             })
         }
     }

@@ -2,23 +2,23 @@
   <el-container>
     <div class="text">
       <div class="text01">
-          <el-col :span="8">
-            <div class="grid-content bg-purple">
-              <el-input placeholder="请输入内容" v-model="token" class="input-with-select">
-                <el-button slot="append" @click="search02()">搜索</el-button>
-              </el-input>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="grid-content bg-purple-light"></div>
-          </el-col>
-          <el-col :span="8">
-            <div class="grid-content bg-purple">
-                <br/>
-                总共浏览: {{overallView}}&nbsp;收藏: {{favorites}}&nbsp;口碑: {{wordMouth}}&nbsp;解读: {{Interpretation}}<br/>
-                点评赞: {{reviewsLike}}&nbsp;问题: {{questionCount}}&nbsp;回答赞: {{answerLikeCount}}&nbsp;<br/>
-            </div>
-          </el-col>
+        <el-col :span="8">
+          <div class="grid-content bg-purple">
+            <el-input placeholder="请输入内容" v-model="token" class="input-with-select">
+              <el-button slot="append" @click="search02()">搜索</el-button>
+            </el-input>
+          </div>
+        </el-col>
+        <el-col :span="8">
+          <div class="grid-content bg-purple-light"></div>
+        </el-col>
+        <el-col :span="8">
+          <div class="grid-content bg-purple">
+            <br/>
+            总共浏览: {{overallView}}&nbsp;收藏: {{favorites}}&nbsp;口碑: {{wordMouth}}&nbsp;解读: {{Interpretation}}<br/>
+            点评赞: {{reviewsLike}}&nbsp;问题: {{questionCount}}&nbsp;回答赞: {{answerLikeCount}}&nbsp;<br/>
+          </div>
+        </el-col>
       </div>
       <div class="text02">
         <!-- stripe:是否为斑马纹 table; -->
@@ -114,13 +114,10 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import Pagination from "./Pagination";
+  import axios from "axios";
+
   export default {
-    name: 'ProductData',
-    components: {
-      Pagination
-    },
+    name: "CompanyData",
     // 传入的数据
     data(){
       return{
@@ -329,7 +326,7 @@
       search02(){
         console.log(this.token);
         let that = this;
-        axios.get("http://mock-api.com/wz2vlNzL.mock/search?token=ming").then(function (res) {
+        axios.get("http://mock-api.com/wz2vlNzL.mock/company?token=" + this.token).then(function (res) {
           console.log(res.data.data);
           that.$emit("changeTableDataAnswer", res.data.data);
         })
@@ -337,19 +334,20 @@
     },
     created() {
       let that = this;
-      axios.get("http://mock-api.com/wz2vlNzL.mock/product/count").then(function (res) {
-          console.log(res);
-          that.overallView = res.data.data.overallView;
-          that.favorites = res.data.data.favorites;
-          that.wordMouth = res.data.data.wordMouth;
-          that.Interpretation = res.data.data.Interpretation;
-          that.questionCount = res.data.data.questionCount;
-          that.answerLikeCount = res.data.data.answerLikeCount;
-          that.reviewsLike = res.data.data.reviewsLike;
+      axios.get("http://mock-api.com/wz2vlNzL.mock/company/count").then(function (res) {
+        console.log(res);
+        that.overallView = res.data.data.overallView;
+        that.favorites = res.data.data.favorites;
+        that.wordMouth = res.data.data.wordMouth;
+        that.Interpretation = res.data.data.Interpretation;
+        that.questionCount = res.data.data.questionCount;
+        that.answerLikeCount = res.data.data.answerLikeCount;
+        that.reviewsLike = res.data.data.reviewsLike;
       })
     }
   }
 </script>
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
