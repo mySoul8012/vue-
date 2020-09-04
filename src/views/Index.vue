@@ -5,7 +5,16 @@
             <el-container>
                 <Menum @callFather="changeData"></Menum>
                 <BoxIndex v-show="cur==0"></BoxIndex>
-                <ProductSelect v-show="cur==1"></ProductSelect>
+                <ProductSelect v-show="cur==1" @func="getMsgFormSon" id="printTable6" :tableData="tableDataProductSelect" :tabheight="tabheight"
+                               :tableHeader="tableHeaderProductSelect"
+                               :loading="loading" :isshow="isshow"
+                               :pagUn="pagUnProductSelect"
+                               :pageSizeNumber="pageSizeNumberProductSelect"
+                               :pagOn="pagOnProductSelect" @changePagOn="changePagOnProductSelect"
+                               @changePagUn="changePagUnProductSelect"
+                               @changeData="changeDataProductSelect"
+                               :pageNum="pageNumProductSelect" @changePageNum="changePageNumProductSelect" @changeDataPage="changeDataPageProductSelect"
+                ></ProductSelect>
                 <TitleManagement v-show="cur==2"  @func="getMsgFormSon" id="printTable" :tableData="tableData" :tabheight="tabheight"
                                  :tableHeader="tableHeader"
                                  :loading="loading" :isshow="isshow"
@@ -99,6 +108,24 @@
         },
         data() {
             return {
+                pageSizeNumberProductSelect: "",
+                pagUnProductSelect: "0",
+                pagOnProductSelect: "1",
+                pageNumProductSelect: "1",
+                tableHeaderProductSelect: [      // 表头
+                    {prop: 'insuranceID', label: '保险ID'},
+                    {prop: 'insuranceProduct', label: '保险产品'},
+                    {prop: 'insuranceCompany', label: '保险公司'},
+                    {prop: 'firstClassifiCation', label: '一级分类'},
+                    // 此处为操作栏，不需要可以删除，clickFun绑定此操作按钮的事件
+                    {
+                        prop: 'oper', label: '操作', fixed: 'right', minWidth: '160px', width: '160px',
+                        oper: [
+                            {name: '查看', style: 'primary', clickFun: this.handleClick},
+                        ]
+                    }
+                ],
+                tableDataProductSelect: "",
                 valueCompany: "",
                 optionsCompany: "",
                 pagNumCompany: "1",
@@ -196,7 +223,8 @@
                     {
                         prop: 'oper', label: '操作', fixed: 'right', minWidth: '160px', width: '160px',
                         oper: [
-                            {name: '查看', style: 'primary', clickFun: this.handleClick}
+                            {name: '查看', style: 'primary', clickFun: this.handleClick},
+                            {name: '编辑', style: 'primary', clickFun: this.handleClick}
                         ]
                     }
                 ],
@@ -207,6 +235,25 @@
         }
         },
         methods: {
+            changeDataProductSelect(number){
+                this.tableDataProductSelect = number;
+            },
+            changeDataPageProductSelect(number){
+                this.tableDataProductSelect = number;
+                let that = this;
+                axios.get("http://mock-api.com/wz2vlNzL.mock/productSelect?pageNum=" + number).then(function (res) {
+                    that.tableDataProductSelect = res.data.data;
+                })
+            },
+            changePageNumProductSelect(number){
+                this.pageNumProductSelect = number;
+            },
+            changePagOnProductSelect(number){
+                this.pagOnProductSelect = number;
+            },
+            changePagUnProductSelect(number){
+                this.pagUnProductSelect = number;
+            },
             changePageNumCompany(number){
                 this.pagNumCompany = number;
             },
@@ -312,7 +359,6 @@
                         that.tableDataQuestion = res.data.data;
                     })
                 }
-
                 if(this.valueQuestion == "ming3"){
                     axios.get("http://mock-api.com/wz2vlNzL.mock/question/list?pageNo="+  number +"&state=ming3").then(function (res) {
                         that.tableDataQuestion = res.data.data;
@@ -393,6 +439,12 @@
             })
             axios.get("http://mock-api.com/wz2vlNzL.mock/product/numberPag").then(function (res) {
                 that.pageSizeNumberProduct = res.data.data.pageSizeNumber;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/productSelect?pageNum=1").then(function (res) {
+                that.tableDataProductSelect = res.data.data;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/productSelect/numberPag").then(function (res) {
+                that.pageSizeNumberProductSelect = res.data.data.pageSizeNumber;
             })
         }
     }
