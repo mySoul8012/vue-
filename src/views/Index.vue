@@ -70,6 +70,31 @@
                              :pageNum="pagNumCompany" @changePageNum="changePageNumCompany" @changeDataPage="changeDataPageProduct"
                              @changeTableDataAnswer="changeTableDataCompany" :options="optionsCompany" @changePageSizeNumberAnswer="changePageSizeNumberCompany"
                              :value="valueCompany" @changeValue="changeValueQuestion"></CompanyData>
+                <InsuranceConsultantManagement
+                    v-show="cur==22"   @func="getMsgFormSon" id="printTable5" :tableData="tableDataInsuranceConsultantManagement" :tabheight="tabheight"
+                    :tableHeader="tableHeaderInsuranceConsultantManagement"
+                    :loading="loading" :isshow="isshow"
+                    :pagUn="pagUnInsuranceConsultantManagement"
+                    :pageSizeNumber="pageSizeNumberInsuranceConsultantManagement"
+                    :pagOn="pagOnInsuranceConsultantManagement" @changePagOn="changePagOnInsuranceConsultantManagement"
+                    @changePagUn="changePagUnInsuranceConsultantManagement"
+                    :pageNum="pagNumInsuranceConsultantManagement" @changePageNum="changePageNumInsuranceConsultantManagement" @changeDataPage="changeDataPageInsuranceConsultantApplication"
+                    @changeTableDataAnswer="changeTableDataInsuranceConsultantManagement" :options="optionsInsuranceConsultantManagement" @changePageSizeNumberAnswer="changePageSizeNumberCompany"
+                    :value="valueInsuranceConsultantManagement" @changeValue="changeValueQuestion"
+                ></InsuranceConsultantManagement>
+                <InsuranceConsultantApplication v-show="cur==23"
+                                                @func="getMsgFormSon" id="printTable8" :tableData="tableDataInsuranceConsultantApplication" :tabheight="tabheight"
+                                                :tableHeader="tableHeaderInsuranceConsultantApplication"
+                                                :loading="loading" :isshow="isshow"
+                                                :pagUn="pagUnInsuranceConsultantApplication"
+                                                :pageSizeNumber="pageSizeNumberInsuranceConsultantApplication"
+                                                :pagOn="pagOnInsuranceConsultantApplication" @changePagOn="changePagOnInsuranceConsultantApplication"
+                                                @changePagUn="changePagUnInsuranceConsultantApplication"
+                                                :pageNum="pagNumInsuranceConsultantApplication" @changePageNum="changePageNumInsuranceConsultantApplication" @changeDataPage="changeDataPageInsuranceConsultantApplication"
+                                                @changeTableDataAnswer="changeTableDataInsuranceConsultantApplication" :options="optionsInsuranceConsultantManagement" @changePageSizeNumberAnswer="changePageSizeNumberApplication"
+                                                :value="valueInsuranceConsultantManagement" @changeValue="changeValueQuestion"
+                >
+                </InsuranceConsultantApplication>
             </el-container>
         </div>
     </div>
@@ -94,8 +119,12 @@
     import QuestionManament from "../components/QuestionManament";
     import ProductData from "../components/ProductData";
     import CompanyData from "../components/CompanyData";
+    import InsuranceConsultantManagement from "../components/InsuranceConsultantManagement"
+    import InsuranceConsultantApplication from "../components/InsuranceConsultantApplication";
     export default {
         components: {
+            InsuranceConsultantApplication,
+            InsuranceConsultantManagement,
             CompanyData,
             ProductData,
             AnswerManament,
@@ -108,6 +137,39 @@
         },
         data() {
             return {
+                pagNumInsuranceConsultantApplication: "1",
+                pagUnInsuranceConsultantApplication: "0",
+                pagOnInsuranceConsultantApplication: "1",
+                pageSizeNumberInsuranceConsultantApplication: "",
+                tableHeaderInsuranceConsultantApplication: [      // 表头
+                    {prop: 'name', label: '姓名'},
+                    {prop: 'idCard', label: '身份证号'},
+                    {prop: 'time', label: '申请时间'},
+                    {prop: 'phone', label: '手机号'},
+                    {prop: 'company', label: '所属公司'},
+                    {
+                        prop: 'oper', label: '操作', fixed: 'right', minWidth: '160px', width: '160px',
+                        oper: [
+                            {name: '通过', style: 'primary', clickFun: this.handleClick},
+                            {name: '拒绝', style: 'primary', clickFun: this.handleClick},
+                        ]
+                    }
+                ],
+                tableDataInsuranceConsultantApplication: "",
+                pagNumInsuranceConsultantManagement: "1",
+                pagUnInsuranceConsultantManagement: "0",
+                pagOnInsuranceConsultantManagement: "1",
+                tableDataInsuranceConsultantManagement: "",
+                pageSizeNumberInsuranceConsultantManagement: "1",
+                tableHeaderInsuranceConsultantManagement: [      // 表头
+                    {prop: 'userId', label: '用户ID'},
+                    {prop: 'userName', label: '姓名'},
+                    {prop: 'IdCard', label: '身份证号'},
+                    {prop: 'time', label: '认证时间'},
+                    {prop: 'phoneNumber', label: '手机号'},
+                    {prop: 'company', label: '所属公司'},
+                    {prop: 'type', label: '类型'}
+                ],
                 pageSizeNumberProductSelect: "",
                 pagUnProductSelect: "0",
                 pagOnProductSelect: "1",
@@ -235,6 +297,41 @@
         }
         },
         methods: {
+            changeDataPageInsuranceConsultantApplication(number){
+              this.tableDataInsuranceConsultantApplication = "";
+              let that = this;
+              axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantApplication?number=" + "" + "0" + String(number)).then(function (res) {
+                  that.tableDataInsuranceConsultantApplication = res.data.data;
+              })
+            },
+            changePageNumInsuranceConsultantApplication(number){
+              this.pagNumInsuranceConsultantApplication = number;
+            },
+            changePagOnInsuranceConsultantApplication(number){
+                this.pagOnInsuranceConsultantApplication = number;
+            },
+            changePagUnInsuranceConsultantApplication(number){
+                this.pagUnInsuranceConsultantApplication = number;
+            },
+            changeTableDataInsuranceConsultantManagement(number){
+              this.tableDataInsuranceConsultantManagement = number;
+            },
+            changeDataPageInsuranceConsultantManagement(number){
+              console.log(this.tableDataInsuranceConsultantManagement);
+              let that = this;
+              axios.get("http://mock-api.com/wz2vlNzL.mock/insuranceConsultantManagement?pageNum=" + number).then(function (res) {
+                  that.tableDataInsuranceConsultantManagement = res.data.data;
+              })
+            },
+            changePageNumInsuranceConsultantManagement(number){
+              this.pagNumInsuranceConsultantManagement = number;
+            },
+            changePagUnInsuranceConsultantManagement(number){
+                this.pagUnInsuranceConsultantManagement = number;
+            },
+            changePagOnInsuranceConsultantManagement(number){
+                this.pagOnInsuranceConsultantManagement = number;
+            },
             changeDataProductSelect(number){
                 this.tableDataProductSelect = number;
             },
@@ -445,6 +542,18 @@
             })
             axios.get("http://mock-api.com/wz2vlNzL.mock/productSelect/numberPag").then(function (res) {
                 that.pageSizeNumberProductSelect = res.data.data.pageSizeNumber;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/insuranceConsultantManagement?pageNum=1").then(function (res) {
+                that.tableDataInsuranceConsultantManagement = res.data.data;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantManagement/pagNumSize").then(function (res) {
+                that.pageSizeNumberInsuranceConsultantManagement = res.data.data.pageSizeNumber;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantApplication?number=01").then(function (res) {
+                that.tableDataInsuranceConsultantApplication = res.data.data;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantApplication/pagNumSize").then(function (res) {
+                that.pageSizeNumberInsuranceConsultantApplication = res.data.data.pageSizeNumber;
             })
         }
     }
