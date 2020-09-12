@@ -95,6 +95,16 @@
                                                 :value="valueInsuranceConsultantManagement" @changeValue="changeValueQuestion"
                 >
                 </InsuranceConsultantApplication>
+                <CompanySelect v-show="cur==51" @func="getMsgFormSon" id="printTable10" :tableData="tableDataCompanySelect" :tabheight="tabheight"
+                               :tableHeader="tableHeaderCompanySelect"
+                               :loading="loading" :isshow="isshow"
+                               :pagUn="pagUnCompanySelect"
+                               :pageSizeNumber="pageSizeNumberCompanySelect"
+                               :pagOn="pagOnCompanySelect" @changePagOn="changePagOnCompanySelect"
+                               @changePagUn="changePagUnCompanySelect"
+                               @changeData="changeDataCompanySelect"
+                               :pageNum="pageNumCompanySelect" @changePageNum="changePageNumCompanySelect" @changeDataPage="changeDataPageCompanySelect"
+                ></CompanySelect>
             </el-container>
         </div>
     </div>
@@ -121,6 +131,7 @@
     import CompanyData from "../components/CompanyData";
     import InsuranceConsultantManagement from "../components/InsuranceConsultantManagement"
     import InsuranceConsultantApplication from "../components/InsuranceConsultantApplication";
+    import CompanySelect from "../components/CompanySelect";
     export default {
         components: {
             InsuranceConsultantApplication,
@@ -133,10 +144,29 @@
             BoxIndex,
             BoxHeader,
             ProductSelect,
-            QuestionManament
+            QuestionManament,
+            CompanySelect
         },
         data() {
+
             return {
+                pageSizeNumberCompanySelect: "",
+                pageNumCompanySelect: "1",
+                pagUnCompanySelect: "0",
+                pagOnCompanySelect: "1",
+                tableHeaderCompanySelect: [      // 表头
+                    {prop: 'comapnyId', label: '公司ID'},
+                    {prop: 'name', label: '公司简称'},
+                    {prop: 'name', label: '公司全称'},
+                    {prop: 'phone', label: '一级分类'},
+                    {
+                        prop: 'oper', label: '操作', fixed: 'right', minWidth: '160px', width: '160px',
+                        oper: [
+                            {name: '查看', style: 'primary', clickFun: (this.handleClick, "1")}
+                            ]
+                    }
+                ],
+                tableDataCompanySelect: "",
                 pagNumInsuranceConsultantApplication: "1",
                 pagUnInsuranceConsultantApplication: "0",
                 pagOnInsuranceConsultantApplication: "1",
@@ -304,6 +334,18 @@
                   that.tableDataInsuranceConsultantApplication = res.data.data;
               })
             },
+            changePageNumCompanySelect(number){
+                this.pageNumCompanySelect = number;
+            },
+            changePagUnCompanySelect(number){
+              this.pagUnCompanySelect = number;
+            },
+            changePagOnCompanySelect(number){
+                this.pagOnCompanySelect = number;
+            },
+            changeDataCompanySelect(number){
+                this.tableDataCompanySelect = number;
+            },
             changePageNumInsuranceConsultantApplication(number){
               this.pagNumInsuranceConsultantApplication = number;
             },
@@ -340,6 +382,13 @@
                 let that = this;
                 axios.get("http://mock-api.com/wz2vlNzL.mock/productSelect?pageNum=" + number).then(function (res) {
                     that.tableDataProductSelect = res.data.data;
+                })
+            },
+            changeDataPageCompanySelect(number){
+                this.tableDataCompanySelect = number;
+                let that = this;
+                axios.get("http://mock-api.com/wz2vlNzL.mock/companySelect?number=" +  "0"  + String(number)).then(function (res) {
+                    that.tableDataCompanySelect = res.data.data;
                 })
             },
             changePageNumProductSelect(number){
@@ -554,6 +603,12 @@
             })
             axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantApplication/pagNumSize").then(function (res) {
                 that.pageSizeNumberInsuranceConsultantApplication = res.data.data.pageSizeNumber;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/companySelect?number=01").then(function (res) {
+                that.tableDataCompanySelect = res.data.data;
+            })
+            axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceSelectCompany/pagNumSize").then(function (res) {
+                that.pageSizeNumberCompanySelect = res.data.data.pageSizeNumber;
             })
         }
     }
