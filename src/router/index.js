@@ -49,8 +49,8 @@ const router = new VueRouter({
 router.beforeEach(
     (to, from, next) => {
       if(to.matched.some(res => res.meta.requireAuth)){
-        console.log(store.state.userInfo.msg)
-        if(store.state.userInfo.msg == "success"){
+        console.log(store.state.userInfo)
+        if(store.state.userInfo != null){
           next();
         }else{
           // 跳转至登录页面

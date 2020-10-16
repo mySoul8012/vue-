@@ -295,9 +295,12 @@
       handleClose(done) {
         this.$confirm('确认关闭？')
             .then(_ => {
+              console.log(_)
               done();
             })
-            .catch(_ => {});
+            .catch(_ => {
+              console.log(_)
+            });
       },
       success(){
         this.dialogVisible = false;

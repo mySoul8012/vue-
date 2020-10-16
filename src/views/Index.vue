@@ -105,6 +105,9 @@
                                @changeData="changeDataCompanySelect"
                                :pageNum="pageNumCompanySelect" @changePageNum="changePageNumCompanySelect" @changeDataPage="changeDataPageCompanySelect"
                 ></CompanySelect>
+                <Brokers v-show="cur==61">
+
+                </Brokers>
             </el-container>
         </div>
     </div>
@@ -132,8 +135,10 @@
     import InsuranceConsultantManagement from "../components/InsuranceConsultantManagement"
     import InsuranceConsultantApplication from "../components/InsuranceConsultantApplication";
     import CompanySelect from "../components/CompanySelect";
+    import Brokers from "../components/Brokers";
     export default {
         components: {
+            Brokers,
             InsuranceConsultantApplication,
             InsuranceConsultantManagement,
             CompanyData,
@@ -598,7 +603,7 @@
             axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantManagement/pagNumSize").then(function (res) {
                 that.pageSizeNumberInsuranceConsultantManagement = res.data.data.pageSizeNumber;
             })
-            axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantApplication?number=01").then(function (res) {
+            axios.get(process.env.VUE_APP_SERVER_URL + "/applicationBrokers?page=1&limit=1").then(function (res) {
                 that.tableDataInsuranceConsultantApplication = res.data.data;
             })
             axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantApplication/pagNumSize").then(function (res) {

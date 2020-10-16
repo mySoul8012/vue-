@@ -3,8 +3,9 @@
     <h1 style="size:40px;">保险维生素运营管理后台</h1>
       <div class="main01">
         <el-input v-model="username" placeholder="账号" class="text1" ></el-input>
+        <el-input v-model="email" placeholder="邮箱" class="text1"></el-input>
         <el-input v-model="password" placeholder="密码" class="text1" show-password></el-input>
-        <el-button type="primary" class="btoon1" @click="submitForm(username, password)">登&nbsp;录</el-button>
+        <el-button type="primary" class="btoon1" @click="submitForm(username, email, password)">登&nbsp;录</el-button>
         <div v-bind:class="{'accountErrorHidden': isA,'accountErrorShow':!isA}">账号或者密码错误</div>
       </div>
   </div>
@@ -47,24 +48,34 @@
 
 <script>
   import axios from 'axios'
+  var qs = require('qs');
   export default {
     data() {
       return {
         username: '',
         password: '',
+        email: '',
         isA: true
       }
     },
     methods: {
-      submitForm(username, password){
+      submitForm(username,email,  password){
         console.log(username, password);
-        let jsonData = "{\"username\": \""+ username +"\",\"password\": \""+ password + "\"}"
-        console.log(JSON.parse(jsonData));
+        let jsonData = "{\n" +
+            "    \"username\": \"mingming\",\n" +
+            "    \"email\": \"mingming@mingming.email\",\n" +
+            "    \"password\": \"123456\"\n" +
+            "}"
+        console.log(jsonData)
         let that = this;
-        axios.post("http://mock-api.com/wz2vlNzL.mock/login", JSON.parse(jsonData)).then(function (res) {
-          console.log(res.data.status);
-          if(res.data.status == 200){
-            that.$store.commit("set_userInfo", res.data.data);
+        console.log(process.env.VUE_APP_SERVER_URL);
+        console.log(username)
+        console.log(email)
+        console.log(password)
+        axios.post(process.env.VUE_APP_SERVER_URL + "/login", qs.stringify({ 'username': username, 'email': email, 'password': password }, { indices: false })).then(function (res) {
+          console.log(res.data);
+          if(res.data.code == 0){
+            that.$store.commit("set_userInfo", res.data.data.token);
             that.$router.push("./index");
           }else{
             that.$message('请求失败');
