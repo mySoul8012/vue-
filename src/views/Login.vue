@@ -72,17 +72,25 @@
         console.log(username)
         console.log(email)
         console.log(password)
-        axios.post(process.env.VUE_APP_SERVER_URL + "/login", qs.stringify({ 'username': username, 'email': email, 'password': password }, { indices: false })).then(function (res) {
+        axios.post("/api/login", qs.stringify({ 'username': username, 'email': email, 'password': password }, { indices: false })).then(function (res) {
           console.log(res.data);
           if(res.data.code == 0){
+            sessionStorage.setItem("userInfo", res.data.data.token)
             that.$store.commit("set_userInfo", res.data.data.token);
             that.$router.push("./index");
           }else{
             that.$message('请求失败');
           }
+        }).catch((error) => {
+          if(error.response){
+            that.$message(error.response.data.message);
+          }
         })
         return false;
       }
+    },
+    created: function() {
+      this.$store.commit("set_userInfo", sessionStorage.getItem("userInfo"));
     }
   }
 </script>

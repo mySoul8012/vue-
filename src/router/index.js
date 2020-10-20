@@ -50,7 +50,7 @@ router.beforeEach(
     (to, from, next) => {
       if(to.matched.some(res => res.meta.requireAuth)){
         console.log(store.state.userInfo)
-        if(store.state.userInfo != null){
+        if(store.state.userInfo != ""){
           next();
         }else{
           // 跳转至登录页面

@@ -78,8 +78,8 @@
                     :pageSizeNumber="pageSizeNumberInsuranceConsultantManagement"
                     :pagOn="pagOnInsuranceConsultantManagement" @changePagOn="changePagOnInsuranceConsultantManagement"
                     @changePagUn="changePagUnInsuranceConsultantManagement"
-                    :pageNum="pagNumInsuranceConsultantManagement" @changePageNum="changePageNumInsuranceConsultantManagement" @changeDataPage="changeDataPageInsuranceConsultantApplication"
-                    @changeTableDataAnswer="changeTableDataInsuranceConsultantManagement" :options="optionsInsuranceConsultantManagement" @changePageSizeNumberAnswer="changePageSizeNumberCompany"
+                    :pageNum="pagNumInsuranceConsultantManagement" @changePageNum="changePageNumInsuranceConsultantManagement" @changeDataPage="changeDataPageInsuranceConsultantManagement"
+                    @changeTableDataAnswer="changeTableDataInsuranceConsultantManagement" :options="optionsInsuranceConsultantManagement" @changePageSizeNumberAnswer="changePageSizeNumberManagement"
                     :value="valueInsuranceConsultantManagement" @changeValue="changeValueQuestion"
                 ></InsuranceConsultantManagement>
                 <InsuranceConsultantApplication v-show="cur==23"
@@ -177,16 +177,17 @@
                 pagOnInsuranceConsultantApplication: "1",
                 pageSizeNumberInsuranceConsultantApplication: "",
                 tableHeaderInsuranceConsultantApplication: [      // 表头
+                    {prop: "id", label: "id"},
                     {prop: 'name', label: '姓名'},
-                    {prop: 'idCard', label: '身份证号'},
-                    {prop: 'time', label: '申请时间'},
-                    {prop: 'phone', label: '手机号'},
+                    {prop: 'idcard', label: '身份证号'},
+                    {prop: 'tmp', label: '申请时间'},
+                    {prop: 'phoneNumber', label: '手机号'},
                     {prop: 'company', label: '所属公司'},
                     {
                         prop: 'oper', label: '操作', fixed: 'right', minWidth: '160px', width: '160px',
                         oper: [
-                            {name: '通过', style: 'primary', clickFun: this.handleClick},
-                            {name: '拒绝', style: 'primary', clickFun: this.handleClick},
+                            {name: '通过', style: 'primary', clickFun: 1},
+                            {name: '拒绝', style: 'primary', clickFun: 2},
                         ]
                     }
                 ],
@@ -197,13 +198,14 @@
                 tableDataInsuranceConsultantManagement: "",
                 pageSizeNumberInsuranceConsultantManagement: "1",
                 tableHeaderInsuranceConsultantManagement: [      // 表头
-                    {prop: 'userId', label: '用户ID'},
-                    {prop: 'userName', label: '姓名'},
-                    {prop: 'IdCard', label: '身份证号'},
-                    {prop: 'time', label: '认证时间'},
+                    {prop: 'id', label: '用户ID'},
+                    {prop: 'name', label: '姓名'},
+                    {prop: 'idcard', label: '身份证号'},
+                    {prop: 'tmp', label: '认证时间'},
                     {prop: 'phoneNumber', label: '手机号'},
                     {prop: 'company', label: '所属公司'},
-                    {prop: 'type', label: '类型'}
+                    {prop: 'commentCount', label: '评论条数'},
+                    {prop: "questionCount", label: "回答条数"}
                 ],
                 pageSizeNumberProductSelect: "",
                 pagUnProductSelect: "0",
@@ -332,11 +334,20 @@
         }
         },
         methods: {
+            changePageSizeNumberManagement(number){
+                this.pageSizeNumberInsuranceConsultantManagement = number;
+            },
+            changePageSizeNumberApplication(number){
+                this.pageSizeNumberInsuranceConsultantApplication = number;
+            },
+            changeTableDataInsuranceConsultantApplication(tableDataInsuranceConsultantApplication){
+                this.tableDataInsuranceConsultantApplication = tableDataInsuranceConsultantApplication;
+            },
             changeDataPageInsuranceConsultantApplication(number){
               this.tableDataInsuranceConsultantApplication = "";
               let that = this;
-              axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantApplication?number=" + "" + "0" + String(number)).then(function (res) {
-                  that.tableDataInsuranceConsultantApplication = res.data.data;
+              axios.get("api/applicationBrokers?page="+ String(number) +"&limit=10").then(function (res) {
+                  that.tableDataInsuranceConsultantApplication = res.data.data.items;
               })
             },
             changePageNumCompanySelect(number){
@@ -366,8 +377,8 @@
             changeDataPageInsuranceConsultantManagement(number){
               console.log(this.tableDataInsuranceConsultantManagement);
               let that = this;
-              axios.get("http://mock-api.com/wz2vlNzL.mock/insuranceConsultantManagement?pageNum=" + number).then(function (res) {
-                  that.tableDataInsuranceConsultantManagement = res.data.data;
+              axios.get("/api/brokers?page=" + number + "&limit=10").then(function (res) {
+                  that.tableDataInsuranceConsultantManagement = res.data.data.items;
               })
             },
             changePageNumInsuranceConsultantManagement(number){
@@ -541,6 +552,7 @@
             }
         },
         created: function(){
+            this.$store.commit("set_userInfo", sessionStorage.getItem("userInfo"));
             let that = this;
             axios.get("http://mock-api.com/wz2vlNzL.mock/title?pageNum=" +  1 +"&pageSize=10").then(function (res) {
                 console.log(res.data);
@@ -597,17 +609,17 @@
             axios.get("http://mock-api.com/wz2vlNzL.mock/productSelect/numberPag").then(function (res) {
                 that.pageSizeNumberProductSelect = res.data.data.pageSizeNumber;
             })
-            axios.get("http://mock-api.com/wz2vlNzL.mock/insuranceConsultantManagement?pageNum=1").then(function (res) {
-                that.tableDataInsuranceConsultantManagement = res.data.data;
+            axios.get("/api/brokers?page=1&limit=10").then(function (res) {
+                that.tableDataInsuranceConsultantManagement = res.data.data.items;
             })
-            axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantManagement/pagNumSize").then(function (res) {
-                that.pageSizeNumberInsuranceConsultantManagement = res.data.data.pageSizeNumber;
+            axios.get("/api/broker/sizeNumberManagement").then(function (res) {
+                that.pageSizeNumberInsuranceConsultantManagement = res.data.data.pageSizeNumberInsuranceConsultantManagement;
             })
-            axios.get(process.env.VUE_APP_SERVER_URL + "/applicationBrokers?page=1&limit=1").then(function (res) {
-                that.tableDataInsuranceConsultantApplication = res.data.data;
+            axios.get("/api/applicationBrokers?page=1&limit=10").then(function (res) {
+                that.tableDataInsuranceConsultantApplication = res.data.data.items;
             })
-            axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantApplication/pagNumSize").then(function (res) {
-                that.pageSizeNumberInsuranceConsultantApplication = res.data.data.pageSizeNumber;
+            axios.get("/api/broker/sizeNumber").then(function (res) {
+                that.pageSizeNumberInsuranceConsultantApplication = res.data.data.pageSizeNumberInsuranceConsultantApplication;
             })
             axios.get("http://mock-api.com/wz2vlNzL.mock/companySelect?number=01").then(function (res) {
                 that.tableDataCompanySelect = res.data.data;

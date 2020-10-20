@@ -93,7 +93,6 @@
             <el-input placeholder="用户昵称" v-model="UserDialogName" disabled="true">
               <template slot="prepend">用户昵称</template>
             </el-input>
-
             <el-input placeholder="请输入原因" v-model="UserDialogReason">
               <template slot="prepend">原因备注</template>
             </el-input>
@@ -181,9 +180,57 @@
         this.$emit('func', IDS)
       },
       clickFun(number, key){
+        // 通过0
+        if(!key){
+          // 发送通过链接
+          let that = this;
+          axios.post("/api/brokers/" + number.id +"/pass-audit").then((res)=>{
+            console.log(res);
+            that.$message(res.data.data.name + " 通过审批");
+            // 刷新页面
+            axios.get("/api/applicationBrokers?page=1&limit=10").then(function (res) {
+              that.tableData = res.data.data.items;
+              that.$emit("changeTableDataAnswer", res.data.data.items );
+            })
+            axios.get("/api/broker/sizeNumber").then(function (res) {
+              that.pageSizeNumber = res.data.data.pageSizeNumberInsuranceConsultantApplication;
+              that.$emit("changePageSizeNumberAnswer", res.data.data.pageSizeNumberInsuranceConsultantApplication)
+            })
+          })
+        }else{
+          // 发送通过链接
+          let that = this;
+          axios.post("/api/brokers/" + number.id +"/reject-audit").then((res)=>{
+            console.log(res);
+            that.$message(res.data.data.name + " 拒绝审批");
+            // 刷新页面
+            axios.get("/api/applicationBrokers?page=1&limit=10").then(function (res) {
+              that.tableData = res.data.data.items;
+              that.$emit("changeTableDataAnswer", res.data.data.items );
+            })
+            axios.get("/api/broker/sizeNumber").then(function (res) {
+              that.pageSizeNumber = res.data.data.pageSizeNumberInsuranceConsultantApplication;
+              that.$emit("changePageSizeNumberAnswer", res.data.data.pageSizeNumberInsuranceConsultantApplication)
+            })
+          })
+        }
         console.log(key);
         console.log(number);
-        this.$message("成功");
+      },
+      loadData(){
+        axios.get("/api/applicationBrokers?page=1&limit=10").then(function (res) {
+          this.tableData = res.data.data.items;
+          this.$emit("changeTableDataAnswer",res.data.data.item );
+        })
+        axios.get("/api/broker/sizeNumber").then(function (res) {
+          this.pageSizeNumber = res.data.data.pageSizeNumber;
+        })
+      },
+      changePageSizeNumberAnswer(number){
+        this.pageSizeNumber = number;
+      },
+      changeTableDataAnswer(tableData){
+        this.tableData = tableData;
       },
       closeShadow(){
         this.dialogVisible=false;

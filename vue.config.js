@@ -1,4 +1,24 @@
 console.log(process.env.VUE_APP_SERVER_URL)
 module.exports = {
-  lintOnSave: false
+  devServer: {
+    disableHostCheck: true,
+    // 设置主机地址
+    host: 'localhost',
+    // 设置默认端口
+    port: 8080,
+    // 设置代理
+    proxy: {
+      '/api': {
+        // 目标 API 地址
+        target: 'http://127.0.0.1:3001/admin-api/v1',
+        // 如果要代理 websockets
+        ws: false,
+        // 将主机标头的原点更改为目标URL
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    }
+  }
 }

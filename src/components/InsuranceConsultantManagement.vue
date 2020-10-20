@@ -15,8 +15,7 @@
         <el-col :span="8">
           <div class="grid-content bg-purple">
             <br/>
-            总共浏览: {{overallView}}&nbsp;收藏: {{favorites}}&nbsp;口碑: {{wordMouth}}&nbsp;解读: {{Interpretation}}<br/>
-            点评赞: {{reviewsLike}}&nbsp;问题: {{questionCount}}&nbsp;回答赞: {{answerLikeCount}}&nbsp;<br/>
+            认证顾问&nbsp;{{CertifiedConsultant}}&nbsp;导入顾问 {{CertifiedCount}}<br/>
           </div>
         </el-col>
       </div>
@@ -121,6 +120,8 @@
     // 传入的数据
     data(){
       return{
+        CertifiedConsultant: "",
+        CertifiedCount: "",
         overallView: "",
         favorites: "",
         wordMouth: "",
@@ -198,9 +199,12 @@
       handleClose(done) {
         this.$confirm('确认关闭？')
             .then(_ => {
+              console.log(_)
               done();
             })
-            .catch(_ => {});
+            .catch(_ => {
+              console.log(_)
+            });
       },
       success(){
         this.dialogVisible = false;
@@ -322,26 +326,24 @@
           this.changePagOn(0)
         }
       },
+
       search02(){
         console.log(this.token);
         let that = this;
-        axios.get("http://mock-api.com/wz2vlNzL.mock/InsuranceConsultantManagement/search?token=" + this.token).then(function (res) {
+        axios.get("/api/broker/search?token=" + this.token).then(function (res) {
           console.log(res.data.data);
-          that.$emit("changeTableDataAnswer", res.data.data);
+          that.$emit("changeTableDataAnswer", res.data.data.items);
+          // 页数更改
+          that.$emit("changePageSizeNumberAnswer", 1);
         })
       }
     },
     created() {
       let that = this;
-      axios.get("http://mock-api.com/wz2vlNzL.mock/company/count").then(function (res) {
+      axios.get("/api/broker/countNumberManagement").then(function (res) {
         console.log(res);
-        that.overallView = res.data.data.overallView;
-        that.favorites = res.data.data.favorites;
-        that.wordMouth = res.data.data.wordMouth;
-        that.Interpretation = res.data.data.Interpretation;
-        that.questionCount = res.data.data.questionCount;
-        that.answerLikeCount = res.data.data.answerLikeCount;
-        that.reviewsLike = res.data.data.reviewsLike;
+        that.CertifiedConsultant = res.data.data.CertifiedConsultant;
+        that.CertifiedCount = res.data.data.CertifiedCount;
       })
     }
   }
