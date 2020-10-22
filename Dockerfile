@@ -8,5 +8,5 @@ RUN cnpm install
 
 EXPOSE 8081
 
-CMD ["npm", "run serve"]
+CMD ["npm", "run", "serve"]
 
