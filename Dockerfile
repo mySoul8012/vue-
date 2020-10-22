@@ -8,7 +8,7 @@ RUN npm install -g npm
 
 RUN npm install
 
-EXPOSE 8081
+EXPOSE 8080
 
 CMD ["npm", "run", "serve"]
 
