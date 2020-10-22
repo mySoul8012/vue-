@@ -6,7 +6,7 @@ ADD . .
 
 RUN npm install -g npm
 
-RUN cnpm install
+RUN npm install
 
 EXPOSE 8081
 
