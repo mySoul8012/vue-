@@ -4,6 +4,8 @@ RUN npm install -g cnpm -registry=https://registry.npm.taobao.org
 
 ADD . .
 
+RUN npm install -g npm
+
 RUN cnpm install
 
 EXPOSE 8081
