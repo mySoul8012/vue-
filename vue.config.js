@@ -10,7 +10,7 @@ module.exports = {
     proxy: {
       '/api': {
         // 目标 API 地址
-        target: 'http://127.0.0.1:3001/admin-api/v1',
+        target: 'https://api.insurv.cn/admin-api/v1',
         // 如果要代理 websockets
         ws: false,
         // 将主机标头的原点更改为目标URL
